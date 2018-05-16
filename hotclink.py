@@ -31,10 +31,22 @@ def PrintAllLink( ):
             post_link = 'https://bbs.hupu.com' + a.get('href')
             post_page = urllib2.urlopen(post_link)
             post_soup = BeautifulSoup(post_page, 'html.parser')
-            for post_a in post_soup.findAll('a'):
-              if post_a.get('class') != None:
-                if "u" in post_a.get('class'):
-                  print post_a.get('href')
+            for post_div in post_soup.findAll('div'):
+              #only extract div which has id
+              if post_div.get('id') != None:
+                # find post topic part via navigating the parse tree by name of the tag, use this trick again and again to zoom in on a certain part
+                if "tpc" in post_div.get('id'):
+                  #use post_div.a refer 
+                  print post_div.a.get('href')
+                  # tpc_author_home_page = urllib2.urlopen(post_div.a.get('href'))
+                  # tpc_author_soup = BeautifulSoup(tpc_author_home_page,'html.parser')
+                  # for home_page_div in tpc_author_soup.findAll('div'):
+                  #   if post_div.get('id') != None:
+                  #     if "personalinfo" in post_div.get('class'):
+            # for post_a in post_soup.findAll('a'):
+            #   if post_a.get('class') != None:
+            #     if "u" in post_a.get('class'):
+            #       print post_a.get('href')
             #break     
   
 if __name__ == "__main__" :  
