@@ -9,7 +9,7 @@ import re
 from bs4 import BeautifulSoup
 #care keyword
 def PrintAllLink( ):
-  care = ["苏亚雷斯","拉莫斯","国家德比","梅西","C罗","乌姆","贝尔", "裁判"]
+  care = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","世界杯","乌姆","贝尔", "裁判"]
   quote_page = 'https://bbs.hupu.com/topic'
   page = urllib2.urlopen(quote_page)
   soup = BeautifulSoup(page, 'html.parser')
@@ -24,7 +24,7 @@ def PrintAllLink( ):
           post_content = a.string
           temp = post_content.decode('utf8')
           #for i in range(len(care)):
-          target_word = u"" + care[4]
+          target_word = u"" + care[1]
           pattern = re.compile(target_word) 
           if pattern.search(temp) != None:
             print a.string
@@ -36,13 +36,30 @@ def PrintAllLink( ):
               if post_div.get('id') != None:
                 # find post topic part via navigating the parse tree by name of the tag, use this trick again and again to zoom in on a certain part
                 if "tpc" in post_div.get('id'):
-                  #use post_div.a refer 
-                  print post_div.a.get('href')
-                  # tpc_author_home_page = urllib2.urlopen(post_div.a.get('href'))
-                  # tpc_author_soup = BeautifulSoup(tpc_author_home_page,'html.parser')
-                  # for home_page_div in tpc_author_soup.findAll('div'):
-                  #   if post_div.get('id') != None:
-                  #     if "personalinfo" in post_div.get('class'):
+                  # #use post_div.a refer 
+                  # print post_div.a.get('href')
+                  tpc_author_home_page = urllib2.urlopen(post_div.a.get('href'))
+                  tpc_author_soup = BeautifulSoup(tpc_author_home_page,'html.parser')
+                  for home_page_div in tpc_author_soup.findAll('div'):
+                    # if "class" in home_page_div:
+                    #   if (home_page_div['class']=="personalinfo"):
+                    #     print home_page_div
+                    if home_page_div.get('class') != None:
+                      if "personalinfo" in home_page_div.get('class'):
+                        # print home_page_div
+                        for span in home_page_div:
+                          if span.string != None:
+                            # print span.string
+                            span_content = span.string
+                            span_content_searcheable = span_content.decode('utf8')
+                            favor = u"" + care[0]
+                            favor_pattern = re.compile(favor)
+                            if favor_pattern.search(span_content_searcheable) != None:
+                              # print span_content
+                              print span.next_sibling.string
+                  # 按id找就可以，按class找就会报syntax error
+                  # personalinfo_div_tag = tpc_author_soup.find("div", id="event")
+                  # print personalinfo_div_tag
             # for post_a in post_soup.findAll('a'):
             #   if post_a.get('class') != None:
             #     if "u" in post_a.get('class'):
