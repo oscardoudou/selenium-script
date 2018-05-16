@@ -54,10 +54,12 @@ def PrintAllLink( ):
                             span_content_searcheable = span_content.decode('utf8')
                             favor = u"" + care[0]
                             favor_pattern = re.compile(favor)
+                            # use target span's previous span to locate
                             if favor_pattern.search(span_content_searcheable) != None:
                               # print span_content
+                              # use next_sibling to navigate target next span
                               print span.next_sibling.string
-                  # 按id找就可以，按class找就会报syntax error
+                  # 按id找就可以，按class找就会报syntax error, the part find tpc could be modify by use one statement
                   # personalinfo_div_tag = tpc_author_soup.find("div", id="event")
                   # print personalinfo_div_tag
             # for post_a in post_soup.findAll('a'):
