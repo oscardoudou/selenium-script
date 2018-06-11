@@ -9,25 +9,27 @@ import re
 from bs4 import BeautifulSoup
 #care keyword
 def PrintAllLink( ):
-  care = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","世界杯","乌姆","贝尔", "裁判"]
+  care = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","世界杯","乌姆","C罗", "裁判"]
   quote_page = 'https://bbs.hupu.com/topic'
   page = urllib2.urlopen(quote_page)
   soup = BeautifulSoup(page, 'html.parser')
-	
-  for a in soup.findAll('a'):
+  count = 1
+  for a in soup.findAll('a'):    
     s = a.get('class')
     # some a has class but some don't, if you simply output the class some would be u['truetit'] some would be None
-    # for tag a dont have class, can not check whether class name is truetit. So first exclude None
+    # for tag a dont have class, can not check whether class name is truetit. So first make sure you exclude None class
     if s != None: 
       # only extract tag a which class is truetit. here use needle in stack to check
       if "truetit" in s:
           post_content = a.string
           temp = post_content.decode('utf8')
           #for i in range(len(care)):
-          target_word = u"" + care[1]
+          target_word = u"" + care[5]
           pattern = re.compile(target_word) 
           if pattern.search(temp) != None:
-            print a.string
+            #strange way to concat int & string in python
+            print str(count) + "." + a.string
+            count += 1
             post_link = 'https://bbs.hupu.com' + a.get('href')
             post_page = urllib2.urlopen(post_link)
             post_soup = BeautifulSoup(post_page, 'html.parser')
@@ -58,7 +60,12 @@ def PrintAllLink( ):
                             if favor_pattern.search(span_content_searcheable) != None:
                               # print span_content
                               # use next_sibling to navigate target next span
-                              print span.next_sibling.string
+                              favor_team = span.next_sibling.string
+                              print favor_team
+                              comparable_team = "皇马"
+                              ucompareable_team = comparable_team.decode('utf8')
+                              ufavor_team = favor_team.decode('utf8')
+                              print ucompareable_team == ufavor_team
                   # 按id找就可以，按class找就会报syntax error, the part find tpc could be modify by use one statement
                   # personalinfo_div_tag = tpc_author_soup.find("div", id="event")
                   # print personalinfo_div_tag
