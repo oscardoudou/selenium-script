@@ -7,13 +7,17 @@ import re
 
 
 from bs4 import BeautifulSoup
-#care keyword
+#care_word keyword
+
 def PrintAllLink( ):
-  care = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","世界杯","乌姆","C罗", "裁判"]
+  care_word = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","世界杯","乌姆","C罗", "裁判"]
   quote_page = 'https://bbs.hupu.com/topic'
   page = urllib2.urlopen(quote_page)
   soup = BeautifulSoup(page, 'html.parser')
-  count = 1
+  post_count = 0
+  care_post_count = 1
+  avail_favor_team_count = 0
+  hit = 0
   for a in soup.findAll('a'):    
     s = a.get('class')
     # some a has class but some don't, if you simply output the class some would be u['truetit'] some would be None
@@ -21,15 +25,19 @@ def PrintAllLink( ):
     if s != None: 
       # only extract tag a which class is truetit. here use needle in stack to check
       if "truetit" in s:
+          post_count += 1
           post_content = a.string
           temp = post_content.decode('utf8')
-          #for i in range(len(care)):
-          target_word = u"" + care[5]
-          pattern = re.compile(target_word) 
-          if pattern.search(temp) != None:
+          care = 0
+          for i in range(len(care_word)):
+            target_word = u"" + care_word[i]
+            pattern = re.compile(target_word) 
+            if pattern.search(temp) != None:
+              care += 1
+          if care >= 1:
             #strange way to concat int & string in python
-            print str(count) + "." + a.string
-            count += 1
+            print str(care_post_count) + "." + a.string
+            care_post_count += 1
             post_link = 'https://bbs.hupu.com' + a.get('href')
             post_page = urllib2.urlopen(post_link)
             post_soup = BeautifulSoup(post_page, 'html.parser')
@@ -54,18 +62,21 @@ def PrintAllLink( ):
                             # print span.string
                             span_content = span.string
                             span_content_searcheable = span_content.decode('utf8')
-                            favor = u"" + care[0]
+                            favor = u"" + care_word[0]
                             favor_pattern = re.compile(favor)
                             # use target span's previous span to locate
                             if favor_pattern.search(span_content_searcheable) != None:
                               # print span_content
                               # use next_sibling to navigate target next span
+                              avail_favor_team_count += 1
                               favor_team = span.next_sibling.string
                               print favor_team
                               comparable_team = "皇马"
                               ucompareable_team = comparable_team.decode('utf8')
                               ufavor_team = favor_team.decode('utf8')
-                              print ucompareable_team == ufavor_team
+                              if ucompareable_team == ufavor_team:
+                                hit += 1
+                                print "hit" + str(hit)
                   # 按id找就可以，按class找就会报syntax error, the part find tpc could be modify by use one statement
                   # personalinfo_div_tag = tpc_author_soup.find("div", id="event")
                   # print personalinfo_div_tag
@@ -73,7 +84,13 @@ def PrintAllLink( ):
             #   if post_a.get('class') != None:
             #     if "u" in post_a.get('class'):
             #       print post_a.get('href')
-            #break     
+            #break 
+  print "-------------------------"
+  print "statistic summary"
+  print "care post percentage: " + str( float (care_post_count - 1) / post_count)
+  print "available favor team percentage: " + str( float (avail_favor_team_count)/ (care_post_count - 1))
+  print "hit percentage: " + str(float (hit) / avail_favor_team_count )
+
   
 if __name__ == "__main__" :  
     # 测试正则表达式  
