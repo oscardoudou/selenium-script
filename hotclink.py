@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 #care_word keyword
 
 def PrintAllLink( ):
-  care_word = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","世界杯","乌姆","C罗", "裁判"]
+  care_word = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","乌姆","C罗", "裁判"]
   quote_page = 'https://bbs.hupu.com/topic'
   page = urllib2.urlopen(quote_page)
   soup = BeautifulSoup(page, 'html.parser')
@@ -35,7 +35,7 @@ def PrintAllLink( ):
             if pattern.search(temp) != None:
               care += 1
           if care >= 1:
-            #strange way to concat int & string in python
+            #strange way to concat int & string in python, str convert value to a string form so they can be combinded with other strings
             print str(care_post_count) + "." + a.string
             care_post_count += 1
             post_link = 'https://bbs.hupu.com' + a.get('href')
@@ -48,7 +48,8 @@ def PrintAllLink( ):
                 if "tpc" in post_div.get('id'):
                   # #use post_div.a refer 
                   # print post_div.a.get('href')
-                  tpc_author_home_page = urllib2.urlopen(post_div.a.get('href'))
+                  tpc_author_link = post_div.a.get('href')
+                  tpc_author_home_page = urllib2.urlopen(tpc_author_link)
                   tpc_author_soup = BeautifulSoup(tpc_author_home_page,'html.parser')
                   for home_page_div in tpc_author_soup.findAll('div'):
                     # if "class" in home_page_div:
@@ -57,6 +58,7 @@ def PrintAllLink( ):
                     if home_page_div.get('class') != None:
                       if "personalinfo" in home_page_div.get('class'):
                         # print home_page_div
+                        has_favor_team = False
                         for span in home_page_div:
                           if span.string != None:
                             # print span.string
@@ -77,6 +79,26 @@ def PrintAllLink( ):
                               if ucompareable_team == ufavor_team:
                                 hit += 1
                                 print "hit" + str(hit)
+                              has_favor_team = True
+                              #跳过后面的span
+                        if has_favor_team == False:
+                          print "currently cannot know its favor team"
+                          # # no favor team in personal page
+                          # tpc_author_tpc_link = tpc_author_link + "/topic"
+                          # print tpc_author_tpc_link
+                          # tpc_author_tpc_page = urllib2.urlopen(tpc_author_tpc_link)
+                          # tpc_author_tpc_soup = BeautifulSoup(tpc_author_tpc_page, 'html.parser')
+                          # #print tpc_author_tpc_soup
+                          # print tpc_author_tpc_soup.select('div[id^=container]')
+                          # # for tpc_page_div in tpc_author_tpc_soup.findAll('div'):
+                          # #   if tpc_page_div.get('id') != None:
+                          # #     print "success check div id"
+                          # #     print tpc_page_div
+                          # #     if "container" in tpc_page_div.get('id'):
+                          # #       print "success locate contend div"
+                          # #       print tpc_page_div
+                          # # for tpc_page_a in tpc_author_tpc_soup.finaAll('td'):
+                          # #   print tpc_page_a
                   # 按id找就可以，按class找就会报syntax error, the part find tpc could be modify by use one statement
                   # personalinfo_div_tag = tpc_author_soup.find("div", id="event")
                   # print personalinfo_div_tag
