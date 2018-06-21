@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 #care_word keyword
 
 def PrintAllLink( ):
-  care_word = ["西甲","苏亚雷斯","拉莫斯","国家德比","梅西","乌姆","C罗", "裁判"]
+  care_word = ["西甲","阿根提","葡萄牙","西班牙","梅西","C罗", "裁判"]
   quote_page = 'https://bbs.hupu.com/topic'
   page = urllib2.urlopen(quote_page)
   soup = BeautifulSoup(page, 'html.parser')
