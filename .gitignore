@@ -1,2 +1,4 @@
 driver/
 *.pyc
+.DS_store
+*.png
