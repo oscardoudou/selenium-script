@@ -9,8 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
 
-USERNAME = '13612062189'
-PASSWORD = 'zhych2608250308'
+USERNAME = 'username'
+PASSWORD = 'password'
 
 class CrackHupu():
 	def __init__(self):
