@@ -22,7 +22,7 @@ def checkAvail( ):
     # browser = webdriver.Chrome(options=chrome_options)
     browser = webdriver.Chrome()
     browser.get('https://www.apple.com/us-hed/shop/buy-mac/macbook-pro/15-inch')
-    print ("browser opened")
+    # print ("browser opened")
     avail = browser.find_element_by_xpath('//*[@id="model-selection"]/bundle-selection/div[4]/div[2]/div[2]/div/div[2]/div/bundle-selector/div[3]/div[1]/div/ul[2]/li[2]/div/div/div/div/div/span[2]').get_attribute('innerText')
     print (avail)
     # make sure you add close, otherwise chromdriver process would exit unexpectly because script ends
